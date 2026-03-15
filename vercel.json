@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/katrina-hu-portfolio_2.html" }
+  ]
+}
