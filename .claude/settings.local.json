@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --version)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(sudo chown:*)",
+      "Read(//usr/local/bin/**)",
+      "Read(//opt/homebrew/**)",
+      "Bash(python3:*)",
+      "Bash(sed -i '' 's/\\\\.hero-image img { width: 100%; display: block; height: auto; border-radius: 0\\\\.8rem; }/.hero-image img { width: 100%; display: block; height: auto; border-radius: 0; box-shadow: 0 20px 60px rgba\\(22,18,14,.18\\), 0 8px 24px rgba\\(22,18,14,.10\\); }/' \"/Users/katrinahu/Downloads/Katrina Portfolio/growth-recommendations.html\")",
+      "Bash(__NEW_LINE_df4bc1256409b8cf__ grep:*)",
+      "Bash(sed -i '' 's/box-shadow: 0 20px 60px rgba\\(22,18,14,.18\\), 0 8px 24px rgba\\(22,18,14,.10\\);/box-shadow: 0 12px 32px rgba\\(22,18,14,.10\\), 0 4px 12px rgba\\(22,18,14,.06\\);/' \"/Users/katrinahu/Downloads/Katrina Portfolio/growth-recommendations.html\")",
+      "Bash(__NEW_LINE_ff9eed5e47bbe109__ grep:*)",
+      "Bash(sed -i '' 's/\\\\.two-col\\\\.wide-image { grid-template-columns: 1fr 3fr; }/.two-col.wide-image { grid-template-columns: 2fr 3fr; }\\\\n    .two-col.wide-image .col-image { margin-right: -6rem; }/' \"/Users/katrinahu/Downloads/Katrina Portfolio/growth-recommendations.html\")",
+      "Bash(__NEW_LINE_d3f0d41e9016be57__ grep:*)",
+      "WebFetch(domain:www.katrina-hu.com)",
+      "mcp__Control_Chrome__open_url",
+      "mcp__Control_Chrome__execute_javascript",
+      "Bash(sed -i '' \"s/var hls = new Hls\\(\\);/var hls = new Hls\\({ startLevel: -1, abrEwmaDefaultEstimate: 10000000 }\\);/\" \"/Users/katrinahu/Downloads/Katrina Portfolio/growth-recommendations.html\")",
+      "Bash(__NEW_LINE_e8f337800e100fd9__ grep:*)",
+      "Bash(/dev/null echo:*)",
+      "Bash(find /Users/katrinahu/Downloads -name *Marketing* -o -name *marketing*)",
+      "Bash(ls -lt /Users/katrinahu/Downloads/*.png /Users/katrinahu/Desktop/*.png)",
+      "Bash(gh auth:*)",
+      "Bash(gh repo:*)",
+      "Bash(git config:*)",
+      "Bash(git -C \"/Users/katrinahu/Downloads/Katrina Portfolio\" remote -v)"
+    ]
+  }
+}

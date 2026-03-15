@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission Control — Katrina Hu</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzZiMWEyZSIvPgogIDx0ZXh0IHg9IjE2IiB5PSIyMiIgZm9udC1mYW1pbHk9Ikdlb3JnaWEsIHNlcmlmIiBmb250LXNpemU9IjEzIiBmb250LXdlaWdodD0iNzAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAuNSI+S0g8L3RleHQ+Cjwvc3ZnPg==" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400;1,9..144,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #faf8f3; --ink: #16120e; --coral: #6b1a2e;
+      --lime: #d6e8f5; --sky: #a8cfe0; --warm-mid: #5a5460;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--cream); color: var(--ink); font-family: 'DM Sans', sans-serif; overflow-x: hidden; cursor: none; }
+
+    .cursor { width: 12px; height: 12px; background: var(--coral); border-radius: 50%; position: fixed; top: 0; left: 0; pointer-events: none; z-index: 99999; transform: translate(-50%,-50%); transition: width .2s, height .2s, background .2s; mix-blend-mode: multiply; }
+    .cursor.hover { width: 32px; height: 32px; background: var(--lime); }
+
+    /* NAV */
+    nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.6rem 3.5rem; transition: background .4s; }
+    nav.scrolled { background: rgba(250,248,243,.88); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(22,18,14,.06); }
+    .nav-logo { font-family: 'DM Sans', sans-serif; font-size: .95rem; font-weight: 500; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--warm-mid); font-size: .82rem; position: relative; }
+    .nav-links a::after { content:''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px; background: var(--ink); transition: width .3s; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-back { display: inline-flex; align-items: center; gap: .4rem; color: var(--ink) !important; font-weight: 500 !important; }
+    .nav-back::after { display: none !important; }
+    .nav-back:hover svg { transform: translateX(-3px); }
+    .nav-back svg { transition: transform .2s; }
+
+    /* PAGE */
+    .page { max-width: 1300px; margin: 0 auto; padding: 0 3.5rem; }
+
+    /* HERO */
+    .hero-grid { display: grid; grid-template-columns: 2fr 3fr; gap: 4rem; align-items: start; padding: 10rem 0 5rem; }
+    .project-company { font-size: .78rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--coral); margin-bottom: 1rem; opacity:0; animation: fadeUp .6s ease forwards .1s; }
+    .project-title { font-family: 'Fraunces', serif; font-size: clamp(2rem,4vw,3.5rem); font-weight: 300; line-height: 1.08; letter-spacing: -.02em; color: var(--ink); margin-bottom: 1.2rem; opacity:0; animation: fadeUp .7s ease forwards .2s; }
+    .project-tagline { font-size: 1rem; line-height: 1.7; color: var(--warm-mid); opacity:0; animation: fadeUp .7s ease forwards .35s; }
+    .project-meta { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; margin-top: 2.5rem; opacity:0; animation: fadeUp .7s ease forwards .5s; }
+    .meta-label { font-size: .65rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #aaa; margin-bottom: .2rem; }
+    .meta-value { font-size: .88rem; font-weight: 500; color: var(--ink); }
+    .hero-image { border-radius: 0; overflow: visible; box-shadow: none; opacity:0; animation: fadeUp .8s ease forwards .4s; }
+    .hero-image img { width: 100%; display: block; height: auto; border-radius: 0.8rem; }
+
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; padding: 3.5rem 0; border-top: 1px solid rgba(22,18,14,.08); border-bottom: 1px solid rgba(22,18,14,.08); }
+    .stat-card { text-align: center; padding: 1.5rem 1rem; }
+    .stat-card + .stat-card { border-left: 1px solid rgba(22,18,14,.08); }
+    .stat-number { font-family: 'Fraunces', serif; font-size: clamp(1.8rem,3vw,2.6rem); font-weight: 700; color: var(--coral); line-height: 1; }
+    .stat-label { font-size: .8rem; color: var(--warm-mid); margin-top: .4rem; line-height: 1.4; }
+
+    /* TWO-COL SECTIONS */
+    .two-col { display: grid; grid-template-columns: 2fr 3fr; gap: 5rem; align-items: center; padding: 5rem 0; border-bottom: 1px solid rgba(22,18,14,.06); }
+    .two-col.reverse { grid-template-columns: 3fr 2fr; }
+    .two-col.reverse .col-text { order: 2; }
+    .two-col.reverse .col-image { order: 1; }
+    .section-label { font-size: .68rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--coral); margin-bottom: .8rem; }
+    .col-text h2 { font-family: 'Fraunces', serif; font-size: clamp(1.3rem,2vw,1.75rem); font-weight: 300; letter-spacing: -.02em; line-height: 1.25; color: var(--ink); margin-bottom: 1.2rem; }
+    .col-text p { font-size: .96rem; line-height: 1.8; color: var(--warm-mid); margin-bottom: 1rem; }
+    .col-text p:last-child { margin-bottom: 0; }
+    .col-text p strong { color: var(--ink); font-weight: 600; }
+    .col-image { border-radius: 0; overflow: visible; box-shadow: none; background: none; }
+    .col-image img { width: 100%; display: block; height: auto; border-radius: 0.8rem; }
+
+    /* HMW */
+    .hmw-block { border-left: 3px solid var(--coral); border-radius: 0 .8rem .8rem 0; padding: 1.4rem 1.6rem; margin-top: 1.4rem; background: rgba(255,255,255,.6); backdrop-filter: blur(8px); }
+    .hmw-block p { font-family: 'Fraunces', serif; font-size: clamp(.95rem,1.5vw,1.1rem); font-weight: 300; line-height: 1.6; color: var(--ink); margin: 0; }
+
+    /* Numbered list */
+    .numbered-list { list-style: none; display: flex; flex-direction: column; gap: .9rem; margin-top: 1.2rem; }
+    .numbered-list li { display: flex; gap: 1rem; align-items: flex-start; }
+    .num { width: 24px; height: 24px; border-radius: 50%; background: var(--coral); color: white; font-size: .68rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: .2rem; }
+    .numbered-list li p { margin: 0; font-size: .94rem; line-height: 1.7; color: var(--warm-mid); }
+    .numbered-list li p strong { color: var(--ink); font-weight: 600; }
+
+    /* Reveal */
+    .reveal { opacity:0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity:1; transform: none; }
+    @keyframes fadeUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: none; } }
+
+    /* Project nav */
+    .project-nav { display: flex; justify-content: space-between; align-items: center; padding: 3rem 0; border-top: 1px solid rgba(22,18,14,.08); }
+    .project-nav a { text-decoration: none; color: var(--warm-mid); font-size: .85rem; font-weight: 500; display: flex; align-items: center; gap: .5rem; transition: color .2s; }
+    .project-nav a:hover { color: var(--ink); }
+
+    /* Coming soon banner */
+    .coming-soon-banner { background: var(--ink); color: var(--cream); text-align: center; padding: 1rem 2rem; font-size: .82rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 500; }
+
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .page { padding: 0 1.5rem; }
+      .hero-grid, .two-col, .two-col.reverse { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-grid { padding: 7rem 0 3rem; }
+      .two-col.reverse .col-text, .two-col.reverse .col-image { order: unset; }
+      .stats-row { grid-template-columns: 1fr; }
+      .stat-card + .stat-card { border-left: none; border-top: 1px solid rgba(22,18,14,.08); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+
+<div class="coming-soon-banner">Case study coming soon</div>
+
+<nav id="nav">
+  <a href="katrina-hu-portfolio_2.html" class="nav-logo">Katrina Hu</a>
+  <ul class="nav-links">
+    <li><a href="katrina-hu-portfolio_2.html#work" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to work
+    </a></li>
+  </ul>
+</nav>
+
+<main class="page">
+
+  <!-- HERO -->
+  <div class="hero-grid">
+    <div>
+      <div class="project-company">MoonRanger</div>
+      <h1 class="project-title">Mission Control</h1>
+      <p class="project-tagline">Ground control interface for MoonRanger — a Carnegie Mellon lunar rover mission. A high-stakes real-time monitoring and control system built for operators managing a rover on the Moon.</p>
+      <div class="project-meta">
+        <div>
+          <div class="meta-label">Role</div>
+          <div class="meta-value">UX Designer</div>
+        </div>
+        <div>
+          <div class="meta-label">Team</div>
+          <div class="meta-value">CMU Robotics</div>
+        </div>
+        <div>
+          <div class="meta-label">Domain</div>
+          <div class="meta-value">Space Tech · Mission Critical</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.squarespace-cdn.com/content/v1/67b5144271a0323d5f616b22/dbfb74b3-7299-4c81-894f-128c01c6d4a7/Frame+499.png" alt="Mission Control Interface" />
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row reveal">
+    <div class="stat-card">
+      <div class="stat-number">1</div>
+      <div class="stat-label">Lunar mission supported</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">0</div>
+      <div class="stat-label">Margin for error</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number">Real-time</div>
+      <div class="stat-label">Telemetry & control</div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="two-col reveal">
+    <div class="col-text">
+      <div class="section-label">Overview</div>
+      <h2>Designing for the highest-stakes environment imaginable</h2>
+      <p>MoonRanger is a small, fast lunar rover developed at Carnegie Mellon University. Mission Control is the ground interface that operators use to monitor telemetry, issue commands, and respond to anomalies — all with a communication delay and no room for error.</p>
+      <p>This project required rethinking how operators build situational awareness under cognitive load, time pressure, and extreme uncertainty.</p>
+    </div>
+    <div class="col-image">
+      <img src="https://images.squarespace-cdn.com/content/v1/67b5144271a0323d5f616b22/dbfb74b3-7299-4c81-894f-128c01c6d4a7/Frame+499.png" alt="Mission Control dashboard" />
+    </div>
+  </div>
+
+  <!-- CHALLENGE -->
+  <div class="two-col reverse reveal">
+    <div class="col-text">
+      <div class="section-label">The Challenge</div>
+      <h2>How might we help operators maintain control when the stakes are absolute?</h2>
+      <div class="hmw-block">
+        <p>How might we design a ground control interface that helps a small team make fast, confident decisions in a high-latency, mission-critical environment?</p>
+      </div>
+      <ul class="numbered-list" style="margin-top:1.5rem;">
+        <li><span class="num">1</span><p><strong>Communication delay</strong> means commands can't be undone once sent.</p></li>
+        <li><span class="num">2</span><p><strong>Dense telemetry</strong> floods operators with data — signal must be separated from noise.</p></li>
+        <li><span class="num">3</span><p><strong>Small team</strong> means one operator must hold multiple mental models simultaneously.</p></li>
+      </ul>
+    </div>
+    <div class="col-image" style="background:rgba(22,18,14,.04); border-radius:.8rem; height:320px; display:flex; align-items:center; justify-content:center; color:rgba(22,18,14,.2); font-size:.85rem;">
+      Image coming soon
+    </div>
+  </div>
+
+  <!-- PROJECT NAV -->
+  <div class="project-nav reveal">
+    <a href="growth-recommendations.html">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Previous project
+    </a>
+    <a href="katrina-hu-portfolio_2.html#work">All work</a>
+    <a href="growth-ai-agents_1.html">
+      Next project
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3L11 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+
+</main>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
